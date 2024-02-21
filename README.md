@@ -7,3 +7,10 @@ Uhh I'm not exactly sure how to put what this does yet, basically it can look at
 
 ## To add later, coloured code
 
+## Basically the idea is to have it as functional as the Jarvis UI within Iron Mans helmet, where you can look at what you're seeing, be it code, images or people and give you relevant info to it 
+allowing you to analyze things super quickly
+
+## Also to add, take an image and generate a spectral decompl of it, so like it takes an image of a drone, converts it to 3D model and i can do what I do like Tony Stark's workbench
+
+### I've had the idea to start making code bases for technologies i hope to implement in the future so when I reach the point where it's possible/ I have the experience, I can Implement it
+
