@@ -1,7 +1,7 @@
 # Jarvis Code Textbook Assistant
 
 Jarvis Code Textbook Assistant is a powerful tool designed to enhance your coding experience by providing dynamic and rapid learning capabilities. Here's an overview of its features and functionalities:
-
+Ps: You need your own GPT-Api key for this to work:(
 ## Code Learning and Note-Taking
 - **Dynamic Learning:** Analyze code quickly and efficiently, treating each function, struct, or class as a page in a textbook.
 - **Rapid Note Population:** Automatically generate notes for each code element, streamlining the learning process.
