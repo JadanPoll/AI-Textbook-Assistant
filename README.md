@@ -1,16 +1,33 @@
-# Jarvis-Code-Textbook-Assistant
-Uhh I'm not exactly sure how to put what this does yet, basically it can look at code and then allows you to dynamically and extremely quickly(eventually) learn complete library bases, basically each function/struct/class in the code is a page in the textbook and you can then populate it with notes, The notes are auto done for you and there's chat
+# Jarvis Code Textbook Assistant
 
-## To add later, using cosine similarity, allows you to find similar related snippets based on your query, say Ctrl+F but supercharged
+Jarvis Code Textbook Assistant is a powerful tool designed to enhance your coding experience by providing dynamic and rapid learning capabilities. Here's an overview of its features and functionalities:
 
-## To add later, implement go to definition and find references similar to Visual Studio Code
+## Code Learning and Note-Taking
+- **Dynamic Learning:** Analyze code quickly and efficiently, treating each function, struct, or class as a page in a textbook.
+- **Rapid Note Population:** Automatically generate notes for each code element, streamlining the learning process.
+- **Interactive Chat:** Enjoy a chat interface for enhanced interaction and discussion while studying.
 
-## To add later, coloured code
+# More to come:
+## Advanced Search with Cosine Similarity
+- **Similar Snippet Retrieval:** Utilize cosine similarity to find related code snippets based on your queries, offering a supercharged alternative to traditional searching (like Ctrl+F).
 
-## Basically the idea is to have it as functional as the Jarvis UI within Iron Mans helmet, where you can look at what you're seeing, be it code, images or people and give you relevant info to it 
-allowing you to analyze things super quickly
+## IDE-Like Functionality
+- **Go to Definition:** Implement a feature similar to Visual Studio Code, allowing users to navigate directly to the definition of a code element.
+- **Find References:** Enhance your coding experience by easily locating references to specific code elements.
 
-## Also to add, take an image and generate a spectral decompl of it, so like it takes an image of a drone, converts it to 3D model and i can do what I do like Tony Stark's workbench
+## Coloured Code for Improved Visualization
+- **Syntax Highlighting:** Add colored code functionality for better visualization and comprehension.
 
-### I've had the idea to start making code bases for technologies i hope to implement in the future so when I reach the point where it's possible/ I have the experience, I can Implement it
+## Futuristic UI Inspired by Jarvis in Iron Man's Helmet
+- **Functional Design:** Aim for a user interface reminiscent of Jarvis in Iron Man's helmet, offering a seamless and intuitive coding experience.
+- **Quick Analysis:** Analyze code, images, and other elements swiftly, providing relevant information on the spot.
 
+## Image Processing and 3D Model Generation
+- **Spectral Decomposition:** Take images and generate spectral decompositions, offering a unique perspective on visual data.
+- **3D Model Conversion:** Convert images, such as drone photos, into 3D models, allowing for creative exploration and manipulation.
+
+## Future-Ready Code Bases
+- **Technological Exploration:** Start building code bases for future technologies, enabling easy implementation when the time and expertise align.
+- **Tony Stark's Workbench Experience:** Aspire to create a workspace reminiscent of Tony Stark's workbench for an immersive and efficient coding environment.
+
+Jarvis Code Textbook Assistant is not just a tool; it's a vision for the future of coding, blending advanced learning techniques with cutting-edge features for an unparalleled coding experience.
