@@ -1,0 +1,441 @@
+// ==UserScript==
+// @name         MyNathanPhind
+// @namespace    http://tampermonkey.net/
+// @version      2024-03-26
+// @description  try to take over the world!
+// @author       You
+// @match        https://www.phind.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=phind.com
+// @grant        GM_xmlhttpRequest
+// ==/UserScript==
+
+// Define the port number variable at the top of your script
+const PORT_NUMBER = 8000;
+
+
+
+(function() {
+
+
+    // Function to handle the response from the local file
+    function handleResponse(response) {
+        if (response.status == 200) {
+            console.log("File contents:");
+            console.log(response.responseText); // Output the content of the local file to the console
+        } else {
+            console.error("Error loading file:", response.statusText);
+        }
+    }
+
+    // URL of the local file
+var localFileUrl = "file:///C:/Users/24namankwah/Desktop/Jarvis/prompt.txt"; // Replace with the path to your local file
+
+    // Make a request to the local file
+    GM_xmlhttpRequest({
+        method: "GET",
+        url: localFileUrl,
+        onload: handleResponse
+    });
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+    let jsonObject2 = {};
+
+
+let options = {}
+let context={}
+    let questionAndAnswerHistory2 = [];
+
+    let globalWebResults2 = [];
+
+
+    let ReturnedResponse2 = "";
+
+
+
+    let existingHistory2 = [];
+
+    let question = "what was the last thing we talked about";
+// Function to convert an object to a deterministic string
+let deterministicStringifyUnique = obj => {
+    let handleValueUnique = value => {
+        if (typeof value === 'object' && value !== null) {
+            if (Array.isArray(value)) {
+                return `[${value.sort().map(item => handleValueUnique(item)).join(",")}]`;
+            } else {
+                return `{${deterministicStringifyUnique(value)}}`;
+            }
+        } else if (typeof value === 'number') {
+            return value.toFixed(8).replace(/\.?0+$/, "");
+        } else if (typeof value === 'boolean') {
+            return value ? "true" : "false";
+        } else if (typeof value === 'string') {
+            return `"${value}"`;
+        } else {
+            return null;
+        }
+    };
+
+    let str = Object.keys(obj).sort().reduce((str, key) => {
+        let value = handleValueUnique(obj[key]);
+        return value !== null ? `${str}${str ? "," : ""}${key}:${value}` : str;
+    }, "");
+
+    return str;
+};
+
+// PRNG function
+let prngGeneralUnique = (seed, multiplier, addend, modulus) => {
+    let result = ((seed * multiplier + addend) % modulus) / modulus;
+    console.log("PRNG Result:", result);
+    return result;
+};
+
+// Linear transformation function
+let linearTransformUnique = t => {
+    let result = 3.87 * t - 0.42;
+    console.log("Linear Transformation Result:", result);
+    return result;
+};
+
+// Function to generate a challenge seed
+let generateChallengeSeedUnique = obj => {
+    let str = deterministicStringifyUnique(obj);
+    console.log("Deterministic Stringify Result:", str);
+    let encodedStr = encodeURIComponent(str);
+    window.temp1 = encodedStr;
+    return (function(t) {
+        let n = [...t],
+            r = 0;
+        for (let t = 0; t < n.length; t += 1)
+                n[t].length > 1 || n[t].charCodeAt(0) >= 256 || (r = (r << 5) - r + n[t][0].charCodeAt(0) | 0);
+        console.log("Challenge Seed Result:", r);
+        return r;
+    })(encodedStr);
+};
+
+// Function to encrypt an object
+let encryptObjectUnique = (obj, multiplier, addend, modulus) => {
+    // Generate a challenge seed
+    let seed = generateChallengeSeedUnique(obj);
+
+    // Generate a pseudo-random number
+    let randomNumber = prngGeneralUnique(seed, multiplier, addend, modulus);
+
+    // Apply a linear transformation
+    let encryptedResult = linearTransformUnique(randomNumber);
+
+    console.log("Encrypted Result:", encryptedResult);
+    return encryptedResult;
+};
+
+// Function to generate a JSON object
+function generateJSON(question, options = {}, context = {}) {
+let questionAndAnswerHistory2 = generatequestionAndAnswerHistory2(
+    ReturnedResponse2,
+    context,
+    [],
+    { id: "xvzw4955d7984k5yh80u" }, // Default metadata
+    [], // Default images
+    "Normal", // Default mode
+    "Phind-34B", // Default modelName
+    [], // Default multiSearchQueries
+    [], // Default previousAnswers
+    question, // Passed question
+    globalWebResults2, // Use globalWebResults2 here
+    (jsonObject2 && jsonObject2.question_and_answer_history) || [] // Check if jsonObject2 is defined and use existing history if available, else use an empty array
+);
+
+
+     jsonObject2 = {
+        "question": question,
+        "options": {
+            "date": options.date || "3/25/2024",
+            "language": options.language || "en-US",
+            "detailed": options.detailed !== undefined ? options.detailed : true,
+            "anonUserId": options.anonUserId || "p3s69wx3sjyjqslww5id75f0",
+            "answerModel": options.answerModel || "GPT-4",
+            "creativeMode": options.creativeMode !== undefined ? options.creativeMode : false,
+            "allowMultiSearch": options.allowMultiSearch !== undefined ? options.allowMultiSearch : true,
+            "customLinks": options.customLinks || []
+        },
+        "context":  ""
+    };
+
+    if(questionAndAnswerHistory2 !="")
+    {
+    if (questionAndAnswerHistory2.length > 0) {
+        jsonObject2.question_and_answer_history = questionAndAnswerHistory2;
+    }
+    }
+
+    // Add a challenge key with the encrypted value
+    jsonObject2.challenge = encryptObjectUnique(jsonObject2, context.multiplier, context.addend, context.modulus);
+
+    return jsonObject2;
+}
+
+
+// Function to generate question and answer history
+function generatequestionAndAnswerHistory2(answer, context = "", customLinks = [], metadata = { id: "xvzw4955d7984k5yh80u" }, images = [], mode = "Normal", modelName = "Phind-34B", multiSearchQueries = [], previousAnswers = [], question, searchResults = [], existingHistory2 = []) {
+    if(answer == "")
+    {
+        return "";
+    }
+    let historyEntry = {
+        answer: answer,
+        context: context,
+        customLinks: customLinks,
+        metadata: metadata,
+        images: images,
+        mode: mode,
+        model_name: modelName,
+        multiSearchQueries: multiSearchQueries,
+        previousAnswers: previousAnswers,
+        question: question,
+        searchResults: searchResults
+    };
+
+    if (existingHistory2.length > 0) {
+        existingHistory2.push(historyEntry);
+        return existingHistory2;
+    } else {
+        existingHistory2=[historyEntry]
+        return existingHistory2;
+    }
+}
+
+// Function to print a JSON object
+function printJSON(json) {
+    console.log(JSON.stringify(json, null, 4));
+}
+
+// Example usage:
+fetch('https://www.phind.com/search?home=true')
+    .then(response => response.text()) // Convert the response to text
+    .then(html => {
+        // Create a DOM parser
+        let parser = new DOMParser();
+        // Parse the HTML string
+        let doc = parser.parseFromString(html, 'text/html');
+        // Find the script element with the ID __NEXT_DATA__
+        let scriptElement = doc.getElementById('__NEXT_DATA__');
+        // Extract the JSON string from the script element
+        let jsonString = scriptElement.textContent;
+        // Parse the JSON string into a JavaScript object
+        let data = JSON.parse(jsonString);
+        // Access the anonUserId
+        let anonUserId = data.props.pageProps.anonUserId;
+        // Access the challengeSeeds
+        let { multiplier, addend, modulus } = data.props.pageProps.challengeSeeds;
+
+        // Log the anonUserId and challengeSeeds
+        console.log("anonUserId:", anonUserId);
+        console.log("Multiplier:", multiplier);
+        console.log("Addend:", addend);
+        console.log("Modulus:", modulus);
+
+        // Now you can use multiplier, addend, and modulus as needed
+
+        // Generate a JSON object with extracted values
+
+         options = {
+            "date": "3/26/2024",
+            "language": "en-US",
+            "detailed": true,
+            "anonUserId": anonUserId,
+            "answerModel": "GPT-4",
+            "creativeMode": false,
+            "allowMultiSearch": true,
+            "customLinks": []
+        };
+         context = {
+            multiplier: multiplier,
+            addend: addend,
+            modulus: modulus
+        };
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function() {
+    // Function to fetch data from get_relay_data endpoint
+    function fetchData() {
+        GM_xmlhttpRequest({
+            url: `http://localhost:${PORT_NUMBER}/get_relay_data_phind`,
+            method: "GET",
+            onload: function(response) {
+                if (response.status === 200) {
+                    try {
+                        console.log(response.responseText);
+                        const { unique_key,apiUrl, arg2 } = JSON.parse(response.responseText);
+
+        let generatedJSON = generateJSON(arg2, options, context);
+        console.log(generatedJSON);
+
+        // Fetch request options
+        let requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8' // Fixing the charset
+            },
+            body: JSON.stringify(generatedJSON)
+        };
+
+
+
+                         // Make the fetch request
+fetch('https://https.api.phind.com/infer/', requestOptions)
+    .then(response => response.text()) // Convert response to JSON
+    .then(data => {
+        console.log('Response:', data);
+
+        // Split the data by new lines
+        let lines = data.split('\n');
+        // Initialize an array to store matched data
+        let matchedData = [];
+        let nonMatchingLines = [];
+        let tokenStream = false; // Flag to indicate if we are in a Token stream
+
+        // Regular expression patterns
+        let beginPattern = /<PHIND_SPAN_BEGIN>(.*?)<\/PHIND_SPAN_BEGIN>/;
+        let endPattern = /<PHIND_SPAN_END>(.*?)<\/PHIND_SPAN_END>/;
+        let webResultsPattern = /<PHIND_WEBRESULTS>(.*?)<\/PHIND_WEBRESULTS>/;
+
+        // Iterate over each line
+        lines.forEach(line => {
+            // Strip "data:" prefix from the line
+            line = line.replace('data: ', '');
+
+            // Check for PHIND_SPAN_BEGIN match
+            let beginMatch = line.match(beginPattern);
+            if (beginMatch && beginMatch[1]) {
+                let beginData = JSON.parse(beginMatch[1]);
+                if (beginData.indicator === 'Token stream') {
+                    tokenStream = true;
+                }
+                matchedData.push({ type: 'SPAN_BEGIN', data: beginData });
+
+                return; // Move to the next line
+            }
+
+            // Check for PHIND_SPAN_END match
+            let endMatch = line.match(endPattern);
+            if (endMatch && endMatch[1]) {
+                let endData = JSON.parse(endMatch[1]);
+                if (endData.indicator === 'Token stream') {
+                    tokenStream = false;
+                }
+                matchedData.push({ type: 'SPAN_END', data: endData });
+                return; // Move to the next line
+            }
+
+            // Check for PHIND_WEBRESULTS match
+            let webResultsMatch = line.match(webResultsPattern);
+            if (webResultsMatch && webResultsMatch[1]) {
+                let webResults = JSON.parse(webResultsMatch[1]);
+                if (webResults.length > 0) {
+                    globalWebResults2= webResults;
+                    console.log("WEBRESULTS:", globalWebResults2);
+                }
+                return; // Move to the next line
+            }
+
+if (tokenStream && line.trim() !== '') {
+    // Check if the line matches the exclusion pattern
+    if (!line.match(/ping\s*-\s*\d{4}-\d{2}-\d{2}/)) {
+        // If the line does not match the exclusion pattern, append it to the continuous string
+        nonMatchingLines += line;
+    }
+}
+
+        });
+
+        // Print the matched data
+        matchedData.forEach(match => {
+            console.log(match.type, match.data);
+        });
+
+        // Print the non-matching lines
+        console.log("Non-matching lines:", nonMatchingLines);
+        ReturnedResponse2=nonMatchingLines;
+JSONReturnedResponse2 = { text: ReturnedResponse2.replace(/[\r\n]+/g, ''),WebResults:globalWebResults2 };
+
+console.log("Icy Hot9", ReturnedResponse2);
+                                // Make another POST request to send the response text back to the server
+                                GM_xmlhttpRequest({
+                                    method: 'POST',
+                                    url: `http://localhost:${PORT_NUMBER}/set_relay_data2_phind`,
+                                    data: JSON.stringify({
+                                        unique_key: unique_key, // Include the unique key here
+                                        Response: JSONReturnedResponse2
+                                    }),
+                                    headers: {
+                                        'Content-Type': 'text/plain'
+                                    },
+                                    onload: function(response) {
+                                        if (response.status === 200) {
+                                            console.log('Response text sent successfully.');
+                                            setTimeout(fetchData, 1000);
+                                        } else {
+                                            console.error('Failed to send response text:', response.statusText);
+                                        }
+                                    },
+                                    onerror: function(response) {
+                                        console.error('Error sending response text:', response.statusText);
+                                    }
+                                });
+    })
+    .catch(error => console.error('Error making fetch request:', error));
+    
+
+                    } catch (error) {
+                        console.error('Error parsing JSON:', error);
+                        fetchData(); // Retry fetching data on error
+                    }
+                } else {
+                    console.error('Failed to load arguments:', response.statusText);
+                    setTimeout(fetchData, 1000); // Retry fetching data after 1 second
+                }
+            },
+            onerror: function(response) {
+                console.error('Error loading arguments:', response.statusText);
+                setTimeout(fetchData, 1000); // Retry fetching data after 1 second
+            },
+            ontimeout: function(response) {
+                console.error('Request timed out:', response.statusText);
+                setTimeout(fetchData, 1000); // Retry fetching data after 1 second
+            },
+        });
+    }
+
+    // Initial call to fetch data
+    fetchData();
+})();
