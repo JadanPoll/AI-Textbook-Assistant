@@ -73,7 +73,7 @@ Once you have installed the Tampermonkey extension and added the scripts, simply
 
 ## Inspiration 1
 
-[![Inspiration 1](https://img.youtube.com/vi/rt1dBr2Jz78/hqdefault.jpg)](https://www.youtube.com/watch?v=rt1dBr2Jz78&t=90s)
+[![Inspiration 1](https://img.youtube.com/vi/rt1dBr2Jz78/hqdefault.jpg)](https://www.youtube.com/watch?v=_lMK9-rDRHY)
 
 ## Inspiration 2
 
