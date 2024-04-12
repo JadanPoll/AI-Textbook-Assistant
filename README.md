@@ -77,7 +77,7 @@ Once you have installed the Tampermonkey extension and added the scripts, simply
 
 ## Inspiration 2
 
-[![Inspiration 2](https://img.youtube.com/vi/uKndgvIu5MY/0.jpg)](https://www.youtube.com/watch?v=uKndgvIu5MY&t=2s)
+[![Inspiration 2](https://img.youtube.com/vi/uKndgvIu5MY/0.jpg)](https://youtu.be/1-U8dEFCvS8)
 
 
 ## Future-Ready Code Bases
