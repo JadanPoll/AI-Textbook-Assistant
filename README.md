@@ -21,14 +21,28 @@ pip install pillow
 ```
 
 ## Additional Setup
+### Install Tampermonkey Extension:
 
-For additional functionality, follow these steps:
+1. **Visit the browser's extension store** (e.g., [Chrome Web Store](https://chrome.google.com/webstore/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo), [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)).
+2. **Search for "Tampermonkey"** and install the extension.
+3. Once installed, you should see the Tampermonkey icon in your browser's toolbar.
 
-1. Install the Tampermonkey extension in your browser.
-2. Insert the following scripts into Tampermonkey:
+### Add Scripts to Tampermonkey:
 
-   - [TamperMonkey/Alt ChatGPT](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/blob/main/TamperMonkey/Alt%20ChatGPT)
-   - [TamperMonkey/Alt Phind](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/blob/main/TamperMonkey/Alt%20OhindT)
+1. Click on the Tampermonkey icon in your browser's toolbar to open the Tampermonkey dashboard.
+2. Select "Dashboard" from the dropdown menu.
+3. In the Tampermonkey dashboard, navigate to the "Utilities" tab on the left sidebar.
+4. Click on "File" and then select "Import" from the dropdown menu.
+5. Copy the raw URL of the script file you want to add. For example:
+   - For Alt ChatGPT: [TamperMonkey/Alt ChatGPT](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/raw/main/TamperMonkey/Alt%20ChatGPT.user.js)
+   - For Alt Phind: [TamperMonkey/Alt Phind](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/raw/main/TamperMonkey/Alt%20Phind.user.js)
+6. Paste the raw URL into the "URL" field and click "Import".
+7. Tampermonkey will then prompt you to review the script. Once you're satisfied, click "Install" to add the script to Tampermonkey.
+8. Repeat the process for each script you want to add.
+
+## Usage
+
+Once you have installed the Tampermonkey extension and added the scripts, simply navigate to a Jarvis Code textbook page, and the assistant will provide additional functionality to improve your browsing experience.
 
 # More to come:
 ## Advanced Search with Cosine Similarity
