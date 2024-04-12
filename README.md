@@ -71,7 +71,11 @@ Once you have installed the Tampermonkey extension and added the scripts, simply
 - **Spectral Decomposition:** Take images and generate spectral decompositions, offering a unique perspective on visual data.
 - **3D Model Conversion:** Convert images, such as drone photos, into 3D models, allowing for creative exploration and manipulation.
 
+## Inspiration 1
+
 [![Inspiration 1](https://img.youtube.com/vi/rt1dBr2Jz78/hqdefault.jpg)](https://www.youtube.com/watch?v=rt1dBr2Jz78&t=90s)
+
+## Inspiration 2
 
 [![Inspiration 2](https://img.youtube.com/vi/uKndgvIu5MY/0.jpg)](https://www.youtube.com/watch?v=uKndgvIu5MY&t=2s)
 
