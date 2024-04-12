@@ -4,10 +4,10 @@
 
 # UI Look and Feel
 
-## Version 0.0.0
+## Version 0.0.0 Example 1
 ![Screenshot](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/raw/main/Images/Screenshot%20(53).png)
 
-## Version 0/0/0
+## Version 0.0.0 Example 2
 ![Screenshot](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/raw/main/Images/Screenshot%20(74).png)
 
 ## Features
