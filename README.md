@@ -50,6 +50,7 @@ For additional functionality, follow these steps:
 ## Image Processing and 3D Model Generation
 - **Spectral Decomposition:** Take images and generate spectral decompositions, offering a unique perspective on visual data.
 - **3D Model Conversion:** Convert images, such as drone photos, into 3D models, allowing for creative exploration and manipulation.
+[![Video Title](http://img.youtube.com/vi/rt1dBr2Jz78/0.jpg)](https://www.youtube.com/watch?v=rt1dBr2Jz78&t=1m30s)
 
 ## Future-Ready Code Bases
 - **Technological Exploration:** Start building code bases for future technologies, enabling easy implementation when the time and expertise align.
