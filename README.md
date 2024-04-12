@@ -2,6 +2,14 @@
 
 **Jarvis Code Textbook Assistant** is a tool designed to facilitate rapid learning and note-taking inspired by the Jarvis AI from Iron Man. Originally created to accelerate code learning, it now extends its functionality to speed up the process of reading and learning from PDF documents. This project aims to provide users with a fast and efficient way to absorb information.
 
+# UI Look and Feel
+
+## Version 0.0.0
+![Screenshot](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/raw/main/Images/Screenshot%20(53).png)
+
+## Version 0/0/0
+![Screenshot](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/raw/main/Images/Screenshot%20(74).png)
+
 ## Features
 
 - **Dynamic Learning:** Analyze code quickly and efficiently, treating each function, struct, or class as a page in a textbook.
