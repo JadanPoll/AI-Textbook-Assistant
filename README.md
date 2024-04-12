@@ -27,10 +27,8 @@ For additional functionality, follow these steps:
 1. Install the Tampermonkey extension in your browser.
 2. Insert the following scripts into Tampermonkey:
 
-   - `ChatGPT_Script`
-   - `Phind_Script` (Optional for extended functionality)
-
----
+   - [TamperMonkey/Alt ChatGPT](script_url1)
+   - [TamperMonkey/Alt Phind](script_url2)
 
 # More to come:
 ## Advanced Search with Cosine Similarity
