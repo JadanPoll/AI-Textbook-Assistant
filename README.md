@@ -34,8 +34,8 @@ pip install pillow
 3. In the Tampermonkey dashboard, navigate to the "Utilities" tab on the left sidebar.
 4. Click on "File" and then select "Import" from the dropdown menu.
 5. Copy the raw URL of the script file you want to add. For example:
-   - For Alt ChatGPT: [TamperMonkey/Alt ChatGPT](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/raw/main/TamperMonkey/Alt%20ChatGPT.user.js)
-   - For Alt Phind: [TamperMonkey/Alt Phind](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/raw/main/TamperMonkey/Alt%20Phind.user.js)
+   - For Alt ChatGPT: [TamperMonkey/Alt ChatGPT](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/raw/main/TamperMonkey/Alt%20ChatGPT)
+   - For Alt Phind: [TamperMonkey/Alt Phind](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/raw/main/TamperMonkey/Alt%20Phind)
 6. Paste the raw URL into the "URL" field and click "Import".
 7. Tampermonkey will then prompt you to review the script. Once you're satisfied, click "Install" to add the script to Tampermonkey.
 8. Repeat the process for each script you want to add.
