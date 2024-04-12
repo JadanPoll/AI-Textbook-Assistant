@@ -1,11 +1,36 @@
 # Jarvis Code Textbook Assistant
 
-Jarvis Code Textbook Assistant is a powerful tool designed to enhance your coding experience by providing dynamic and rapid learning capabilities. Here's an overview of its features and functionalities:
-Ps: You need your own GPT-Api key for this to work:(
-## Code Learning and Note-Taking
+**Jarvis Code Textbook Assistant** is a tool designed to facilitate rapid learning and note-taking inspired by the Jarvis AI from Iron Man. Originally created to accelerate code learning, it now extends its functionality to speed up the process of reading and learning from PDF documents. This project aims to provide users with a fast and efficient way to absorb information.
+
+## Features
+
 - **Dynamic Learning:** Analyze code quickly and efficiently, treating each function, struct, or class as a page in a textbook.
 - **Rapid Note Population:** Automatically generate notes for each code element, streamlining the learning process.
-- **Interactive Chat:** Enjoy a chat interface for enhanced interaction and discussion while studying.
+- **Interactive Chat:** Engage in a chat interface for enhanced interaction and discussion while studying.
+
+## Installation
+
+To install, use the following pip commands:
+
+```bash
+pip install tkhtmlview
+pip install cssutils
+pip install bs4
+pip install PyMuPDF
+pip install pillow
+```
+
+## Additional Setup
+
+For additional functionality, follow these steps:
+
+1. Install the Tampermonkey extension in your browser.
+2. Insert the following scripts into Tampermonkey:
+
+   - `ChatGPT_Script`
+   - `Phind_Script` (Optional for extended functionality)
+
+---
 
 # More to come:
 ## Advanced Search with Cosine Similarity
