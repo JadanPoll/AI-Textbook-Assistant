@@ -27,8 +27,8 @@ For additional functionality, follow these steps:
 1. Install the Tampermonkey extension in your browser.
 2. Insert the following scripts into Tampermonkey:
 
-   - [TamperMonkey/Alt ChatGPT](script_url1)
-   - [TamperMonkey/Alt Phind](script_url2)
+   - [TamperMonkey/Alt ChatGPT](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/blob/main/TamperMonkey/Alt%20ChatGPT)
+   - [TamperMonkey/Alt Phind](https://github.com/JadanPoll/Jarvis-Code-Textbook-Assistant/blob/main/TamperMonkey/Alt%20OhindT)
 
 # More to come:
 ## Advanced Search with Cosine Similarity
