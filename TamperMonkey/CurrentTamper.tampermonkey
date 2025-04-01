@@ -1,0 +1,907 @@
+// ==UserScript==
+// @name         WebSocket Info Retriever
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Retrieve info from a WebSocket server
+// @author       You
+// @match        *://*.phind.com/*
+// @match        *://*.chat.openai.com/*
+// @match        *://*.chatgpt.com/*
+// @match        *://*.perplexity.ai/*
+// @match        https://perchance.org/ai-text-to-image-generator
+// @match        https://perchance.org/welcome
+// @grant        GM_xmlhttpRequest
+// @connect      *
+// ==/UserScript==
+
+class FetchWebSocket {
+    constructor(baseUrl) {
+        this.baseUrl = baseUrl;
+        this.clientId = null;
+        this.isConnected = false;
+        this.messagesContainer = document.getElementById('messages');
+
+        this.onopen = null;
+        this.onmessage = null;
+        this.onerror = null;
+        this.onclose = null;
+
+        this.connect();
+    }
+
+    connect() {
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: `${this.baseUrl}/connect`,
+            onload: (response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    const { clientId } = JSON.parse(response.responseText);
+                    this.clientId = clientId;
+                    this.isConnected = true;
+
+                    if (this.onopen) {
+                        this.onopen();
+                    }
+
+                    this.poll();
+                } else {
+                    this.handleError(new Error('TamperMonker Network response was not ok'));
+                }
+            },
+            onerror: (error) => {
+                this.handleError(error);
+            }
+        });
+    }
+
+    disconnect() {
+        this.isConnected = false;
+
+        if (this.onclose) {
+            this.onclose();
+        }
+
+        if (this.clientId) {
+            GM_xmlhttpRequest({
+                method: "POST",
+                url: `${this.baseUrl}/disconnect`,
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({ clientId: this.clientId })
+            });
+        }
+    }
+
+    poll() {
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: `${this.baseUrl}/poll?clientId=${this.clientId}`,
+            onload: (response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    const { message } = JSON.parse(response.responseText);
+                    this.handleMessage(message);
+                    this.poll(); // Continue polling
+                } else {
+                    this.handleError(new Error('Network response was not ok'));
+                }
+            },
+            onerror: (error) => {
+                this.handleError(error);
+            }
+        });
+    }
+
+    handleMessage(message) {
+        if (this.onmessage) {
+            this.onmessage({ data: message });
+        }
+    }
+
+    handleError(error) {
+        console.error('Fetch error:', error);
+
+        if (this.onerror) {
+            this.onerror(error);
+        }
+
+        this.disconnect();
+        setTimeout(() => this.connect(), 5000); // Retry connection after 5 seconds
+    }
+
+    send(message) {
+        GM_xmlhttpRequest({
+            method: "POST",
+            url: `${this.baseUrl}/send`,
+            headers: { 'Content-Type': 'application/json' },
+            data: JSON.stringify({ clientId: this.clientId, message }),
+            onload: (response) => {
+                if (!(response.status >= 200 && response.status < 300)) {
+                    this.handleError(new Error('Network response was not ok'));
+                }
+            },
+            onerror: (error) => {
+                this.handleError(error);
+            }
+        });
+    }
+}
+
+
+
+
+
+
+
+
+// Function to start playing the tone
+function playQuietTone(frequency, volume) {
+    // Initialize AudioContext
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioContext = new AudioContext();
+
+    // Create an oscillator node
+    const oscillator = audioContext.createOscillator();
+
+    // Set the oscillator frequency
+    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+
+    // Create a gain node (volume control)
+    const gainNode = audioContext.createGain();
+    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+
+    // Connect oscillator to gain node and gain node to the output (speakers)
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    // Start the oscillator
+    oscillator.start();
+    console.log("Oscillating");
+    // Return the oscillator node so it can be stopped later if needed
+    return oscillator;
+}
+
+// Function to play after 5 seconds
+async function playAfterDelay() {
+    await new Promise(resolve => setTimeout(resolve, 7000)); // Wait for 5 seconds
+    playQuietTone(200, 0.00); // Call playQuietTone after the delay
+}
+
+// Call the function to start the process
+playAfterDelay();
+// To stop the tone after some time (e.g., 5 seconds), you can use:
+// setTimeout(() => oscillator.stop(), 5000);
+
+
+
+// Initialize AudioContext globally
+let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+// Function to play a tone at a specific frequency
+let playTone = (frequency, duration = 100) => {
+    let oscillator = audioContext.createOscillator();
+    oscillator.type = 'sine'; // Sine wave oscillator
+    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+    oscillator.connect(audioContext.destination);
+    oscillator.start();
+    setTimeout(() => oscillator.stop(), duration);
+};
+
+
+
+
+
+let iFrametypeTextIntoTextarea = (text, selector = 'textarea') => {
+    // Get the iframe element
+    let iframe = document.querySelector('iframe');
+    if (!iframe) {
+        console.error('No iframe found');
+        return;
+    }
+
+    let iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+    // Check if the selector is targeting a textarea within an iframe
+    let textarea = (selector === 'textarea') ?
+        iframeDoc.activeElement :
+    iframeDoc.querySelector(selector);
+
+    if (textarea) {
+        textarea.focus();
+        textarea.textContent = text; // Use textContent to set text in textarea
+        textarea.dispatchEvent(new Event('input', { bubbles: true }));
+
+        // Optionally, you might want to trigger a key event
+        let enterKeyEvent = new KeyboardEvent('keydown', {
+            key: 'Enter',
+            keyCode: 13,
+            which: 13,
+            bubbles: true,
+        });
+
+        textarea.dispatchEvent(enterKeyEvent);
+
+        // Optionally, play a tone
+        playTone(500);
+    } else {
+        console.error('Textarea element not found');
+    }
+};
+
+// Function to simulate typing text into a textarea
+let typeTextIntoTextarea = (text, selector = 'textarea') => {
+    let textarea ="";
+    if(selector==='textarea')
+    {
+        textarea = document.activeElement;
+    }
+    else
+    {
+        console.log("Searching for", selector);
+        textarea = document.querySelector(selector);
+        textarea.value = '';
+
+    }
+
+    console.log(textarea);
+    if (textarea) {
+        textarea.focus();
+        document.execCommand('selectAll', false, null);
+        document.execCommand('delete', false, null);
+        document.execCommand('insertText', false, text);
+        textarea.dispatchEvent(new Event('input', { bubbles: true }));
+        playTone(500);
+
+
+        // Simulate keydown event for Enter key
+        let enterKeyEvent = new KeyboardEvent('keydown', {
+            key: 'Enter',
+            keyCode: 13,
+            which: 13,
+            bubbles: true,
+        });
+
+        textarea.dispatchEvent(enterKeyEvent);
+    } else {
+        console.error('Textarea element not found');
+    }
+};
+
+// Function to programmatically click a button with the data-testid attribute
+let clickButton = (selector) => {
+    /*let button = document.querySelector(selector);
+    if (button) {
+        // Simulate a click by dispatching a click event
+        button.click();
+        console.log("Button clicked");
+        playTone(800);
+    } else {
+        console.error('Button with data-testid attribute not found');
+    }*/
+};
+
+// Function to programmatically click a button with the data-testid attribute
+let clickButton2 = (selector) => {
+    let button = document.querySelector(selector);
+    if (button) {
+        // Simulate a click by dispatching a click event
+        button.click();
+        console.log("Button clicked");
+        playTone(800);
+    } else {
+        console.error('Button with data-testid attribute not found');
+    }
+};
+
+// Context for each AI
+let context = {
+    sendGPT: { prevEndCount: -1 },
+    sendPhind: { prevEndCount: -1 },
+    sendPerplexity: { prevEndCount: -1 },
+    sendPerchanceImage:{ prevEndCount: -1 }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let stream; // Define stream globally
+
+
+// Check if divs array is empty
+if (document.location.href.includes('perchance.org/welcome')) {
+    // Function to start the stream
+    async function startStream() {
+        try {
+            stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+            console.log('Stream started');
+        } catch (error) {
+            console.error('Error starting stream:', error);
+        }
+    }
+
+    startStream();
+}
+
+if (document.location.href.includes('ai-text-to-image-generator')) {
+
+
+
+
+
+    // URL of the website from which you want to extract HTML
+    var websiteURL = "https://feather-sunrise-element.glitch.me";
+
+
+
+
+
+    // Make a request to the website to get its HTML content
+    GM_xmlhttpRequest({
+        method: "GET",
+        url: websiteURL,
+        onload: function(response) {
+            if (response.status === 200) {
+                var customHTML = response.responseText;
+
+
+                // Create a temporary container to parse HTML
+                var tempContainer = document.createElement('div');
+                tempContainer.innerHTML = customHTML;
+
+                // Replace the current page HTML with custom HTML
+                document.open();
+                document.write(tempContainer.innerHTML);
+                document.close();
+
+
+
+
+            } else {
+                console.error("Failed to fetch HTML from " + websiteURL);
+            }
+        }
+    });
+
+
+
+
+
+
+
+}
+
+
+// Main function to execute the typing and clicking sequence with a delay
+let sendAndThenGetContent = async (aiOption,textToType) => {
+    let response=[];
+    let divs, count, currentExecution;
+    let aiContext = context[aiOption];
+    console.log(aiContext);
+
+    switch (aiOption) {
+
+
+
+        case 'getPerchanceImage':
+            console.log("Hereeree");
+
+
+            // Check if divs array is empty
+
+            if (!document.location.href.includes('perchance.org/welcome')) {
+                return [];
+            }
+
+
+            if (!stream) {
+                console.log("Starting stream...");
+                await startStream();
+            }
+
+
+
+
+
+
+            // Function to capture a screenshot
+            function captureScreenshot(stream) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const video = document.createElement('video');
+                        video.srcObject = stream;
+                        let hasRun=false
+                        video.addEventListener('loadedmetadata', async function() {
+                            if(hasRun)
+                            {return;
+                            }
+
+                            hasRun=true;
+                            const canvas = document.createElement('canvas');
+                            canvas.width = video.videoWidth;
+                            canvas.height = video.videoHeight;
+                            const ctx = canvas.getContext('2d');
+
+                            // Capture a few frames
+                            for (let i = 0; i < 1; i++) {
+                                await delay(500); // Delay for 500 milliseconds between each capture
+                                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                                const screenshotDataURL = canvas.toDataURL('image/jpeg', 0.99);
+                                let img = document.createElement('img');
+                                img.src = screenshotDataURL;
+                                response.push(img.outerHTML);
+                                console.log('Screenshot captured:', img);
+                            }
+
+                            video.remove();
+                            resolve();
+                        });
+                        // Autoplay the video
+                        video.autoplay = true;
+                        // Start playing the video
+                        document.body.appendChild(video);
+                    } catch (error) {
+                        console.error('Error capturing screenshot:', error);
+                        reject(error);
+                    }
+                });
+            }
+
+
+            // Function to delay
+            function delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+
+            try {
+                await captureScreenshot(stream);
+                console.log('Capture complete');
+            } catch (error) {
+                console.error('Failed to capture screenshot:', error);
+            }
+            break;
+        case 'sendPerchanceImage':
+            console.log("Hereeree");
+
+
+            // Check if divs array is empty
+
+            if (!document.location.href.includes('ai-text-to-image-generator')) {
+                return [];
+            }
+
+            typeTextIntoTextarea(textToType, 'textarea[id="prompt"]');
+
+
+
+
+
+
+
+
+            break;
+
+
+
+
+
+
+
+
+
+
+
+        case 'sendGPT':
+            console.log("Hereeree");
+            let buttons = document.querySelectorAll('button[class*="rounded-md"]');
+            count = buttons.length;
+
+
+
+            // Check if divs array is empty
+
+            if (!document.location.href.includes('gpt')) {
+                return [];
+            }
+
+
+            aiContext.prevEndCount=count;
+
+            typeTextIntoTextarea(textToType, 'textarea[placeholder="Message ChatGPT"]');
+
+            setTimeout(() => {
+                clickButton2('[data-testid="send-button"]');
+                clickButton2('[data-testid="fruitjuice-send-button"]');
+            }, 1000);
+
+            // Wait until condition is fulfilled
+            while (true) {
+                let buttons = document.querySelectorAll('button[class*="rounded-md"]');
+                count = buttons.length;
+
+                if (aiContext.prevEndCount === count) {
+                    // Do nothing, condition not met
+                } else if (aiContext.prevEndCount < count) {
+                    console.log("Exit 1");
+                    aiContext.prevEndCount = count;
+                    break; // Exit loop once condition is fulfilled
+                } else if (aiContext.prevEndCount > count) {
+                    console.log("Exit 2");
+                    aiContext.prevEndCount = count;
+                    break; // Exit loop once condition is fulfilled
+                }
+
+
+                console.log("Loading...");
+                // Simulate a sleep for 1 second
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+
+
+            // After clicking the button
+            try {
+                divs = document.querySelectorAll('div[data-message-id]');
+                divs = Array.from(divs);
+
+                if (divs.length > 0) {
+                    let lastDiv = divs[divs.length - 1];
+
+                    console.log('Children content:');
+                    for (let i = 0; i < lastDiv.children.length; i++) {
+                        //console.log(`Child ${i + 1}:`, lastDiv.children[i].textContent);
+                        response.push(lastDiv.children[i].innerHTML)
+                    }
+                } else {
+                    console.error('No divs matching the criteria found.');
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+            break;
+
+        case 'sendPhind':
+
+
+
+            divs = document.querySelectorAll('div.mt-n2.mb-4');
+
+
+            count = divs.length;
+
+
+            // Check if divs array is empty
+
+            if (!document.location.href.includes('phind')) {
+                return [];
+            }
+
+
+            aiContext.prevEndCount=count;
+
+
+            typeTextIntoTextarea(textToType);
+
+            setTimeout(() => {
+                clickButton('button[class="btn btn-sm mx-1 rounded-1 fs-5 p-1 lift"]');
+                clickButton('button[class="btn p-2 rounded-0"]');
+
+            }, 2000);
+
+            // Wait until condition is fulfilled
+            while (true) {
+                divs = document.querySelectorAll('div.mt-n2.mb-4');
+                count = divs.length;
+
+                if (aiContext.prevEndCount === count) {
+                    // Do nothing, condition not met
+                } else if (aiContext.prevEndCount < count) {
+                    aiContext.prevEndCount = count;
+                    break; // Exit loop once condition is fulfilled
+                } else if (aiContext.prevEndCount > count) {
+                    aiContext.prevEndCount = -1;
+                    break; // Exit loop once condition is fulfilled
+                }
+
+                console.log("Loading...");
+                // Simulate a sleep for 1 second
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+
+
+            try {
+                divs = document.getElementsByTagName('div');
+                let filteredDivs = Array.from(divs).filter(div => div.getAttribute('name')?.startsWith('answer'));
+
+
+
+
+
+                let matchingDivs0 = filteredDivs
+                .flatMap(div => Array.from(div.children));
+
+                let lastElement = '';
+
+
+                matchingDivs0 = matchingDivs0 // Filter the initial array based on the first set of classes
+                    .filter(child => {
+                    let classList = (child.getAttribute('class') || '').split(' ');
+                    return classList.includes('col-12') && classList.includes('mt-5');
+                });
+
+                lastElement = matchingDivs0[matchingDivs0.length - 1].children[0]; // Get the last element after first filter
+
+
+                lastElement = lastElement.children[0]; // Get the last element after second filter
+
+                matchingDivs0=[lastElement.innerHTML];
+
+                console.log('Final matchingDivs0:', matchingDivs0);
+
+
+
+
+                let matchingDivs1 = filteredDivs.flatMap(div => Array.from(div.children))
+                .filter(child => {
+                    let classList = child.getAttribute('class');
+                    return classList && classList.includes('mt') && classList.includes('col');
+                });
+
+                // Assuming matchingDivs1 is already defined and contains the structure you're working with
+                let targetElement0 = matchingDivs1[matchingDivs1.length - 1].children[2].children[0];
+
+
+                // Now, all <style> tags within the target element and its descendants should be removed
+
+
+                matchingDivs1=[matchingDivs1[matchingDivs1.length-1].children[0].children[0],targetElement0];
+                console.log("Nothing",matchingDivs1);
+                if (matchingDivs0.length > 0) {
+                    let lastMatchingChild = matchingDivs0[matchingDivs0.length - 1];
+                    //console.log('Content of the last matching child with "col" twice:', lastMatchingChild.textContent);
+
+                    response.push(lastMatchingChild);
+                }
+
+                if (matchingDivs1.length > 0) {
+                    let lastMatchingChild = matchingDivs1[0];
+                    console.log('Content of the last matching child with "mt" and "col":', lastMatchingChild.innerHTML);
+
+                    //response.push(lastMatchingChild.innerHTML);
+
+
+
+                    lastMatchingChild = matchingDivs1[1][0];
+                    console.log('Content of the last matching child with "mt" and "col":', lastMatchingChild.innerHTML);
+
+                    response.push(lastMatchingChild.innerHTML)
+                } else {
+                    console.log('No matching div elements found');
+                }
+            } catch (error) {
+                console.error('Error occurred:', error.message);
+            }
+            break;
+
+        case 'sendPerplexity':
+
+
+
+
+
+            divs = document.querySelectorAll('div[class*="mt-sm"]');
+            count = divs.length;
+
+
+
+
+
+
+
+            if (!document.location.href.includes('perplexity')) {
+                return [];
+            }
+
+
+
+            aiContext.prevEndCount=count;
+
+
+
+            //            typeTextIntoTextarea(textToType,'textarea[placeholder="Ask follow-up"]');
+            typeTextIntoTextarea(textToType);
+
+            //   setTimeout(() => {
+            //        clickButton('button[aria-label="Submit"]');
+            //   }, 1000);
+
+            // Wait until condition is fulfilled
+            while (true) {
+                divs = document.querySelectorAll('div[class*="mt-sm"]');
+                count = divs.length;
+
+                if (aiContext.prevEndCount === count) {
+                    // Do nothing, condition not met
+                } else if (aiContext.prevEndCount < count) {
+                    aiContext.prevEndCount = count;
+                    break; // Exit loop once condition is fulfilled
+                } else if (aiContext.prevEndCount > count) {
+                    aiContext.prevEndCount = count; //for perplexity
+                    // Exit loop once condition is fulfilled
+                }
+
+                console.log("Loading...");
+                // Simulate a sleep for 1 second
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+
+
+            try {
+                divs = document.querySelectorAll('div[class*="pb-lg"]');
+                divs = Array.from(divs);
+
+                if (divs.length > 0) {
+                    let lastDiv = divs[divs.length - 1].children[0].children[0];
+
+                    console.log('Children content:',lastDiv);
+
+                    // Printing and pushing innerHTML of each child as specified
+                    console.log('Child 1 innerHTML:', lastDiv.children[0]);
+                    //response.push(lastDiv.children[0].innerHTML);
+
+                    console.log('Child 2 innerHTML:', lastDiv.children[1]);
+
+                    if (lastDiv.children[1].children[0].children[1] === undefined) {
+                        // If the specified child is undefined, execute this block
+                        //response.push(lastDiv.children[1].children[0].children[0].children[0].children[1].innerHTML);
+                        response.push(lastDiv.children[1].children[1].innerHTML);
+                        //response.push(lastDiv.children[1].children[1].children[2].innerHTML);
+                    } else {
+                        // Otherwise, execute this block
+                        response.push(lastDiv.children[1].children[1].innerHTML);
+                    }
+
+                    //response.push(lastDiv.children[2].children[0].children[0].children[1].innerHTML);
+
+                } else {
+                    console.error('No divs with class containing "pb-lg" found.');
+                }
+            } catch (error) {
+                console.error('No div elements found:', error.message);
+            }
+            break;
+
+        case 'refreshAll':
+            // Refresh the window to the base URL without the query string and then reload the page
+
+            // Get the base URL without any path or query parameters
+            var baseUrl = window.location.protocol + "//" + window.location.hostname + "/";
+
+            // Reload the page to the base URL
+            window.location.href = baseUrl;
+            console.log(baseUrl);
+            break;
+        default:
+            console.error('Invalid AI option selected');
+            return;
+
+    }
+
+    sendAndThenGetContent.counter = currentExecution + 1;
+
+    return response;
+};
+
+
+// Example usage: start the execution with the desired AI option and interval
+//sendAndThenGetContent('sendPhind','Hello World'); // Change 'sendGPT' to 'sendPhind' or 'sendPerplexity' as needed
+
+
+// Example usage: start the execution with the desired AI option and interval
+//sendAndThenGetContent('solvePhind','Hello World'); // Change 'solveGPT' to 'solvePhind' or 'solvePerplexity' as needed
+//sendAndThenGetContent('solveGPT','Hello World'); // Change 'solveGPT' to 'solvePhind' or 'solvePerplexity' as needed
+//sendAndThenGetContent('solvePerplexity','Hello World'); // Change 'solveGPT' to 'solvePhind' or 'solvePerplexity' as needed
+
+
+
+
+
+
+
+
+
+
+
+(function() {
+    'use strict';
+
+    // Replace these URLs with the actual WebSocket URLs you're interested in
+    //const WsUrl = 'wss://dapper-purple-anise.glitch.me';
+
+
+    const serverUrl = 'https://ninth-swamp-orangutan.glitch.me'; // WebSocket server URL
+
+    const caesarShift = (str, shift) => {
+        return str
+            .split('')
+            .map(char => {
+            const code = char.charCodeAt(0);
+            if ((code >= 65 && code <= 90) || (code >= 97 && code <= 122)) {
+                let shiftedCode = code + shift;
+                if ((code >= 65 && code <= 90 && shiftedCode > 90) || (code >= 97 && code <= 122 && shiftedCode > 122)) {
+                    shiftedCode -= 26;
+                } else if ((code >= 65 && code <= 90 && shiftedCode < 65) || (code >= 97 && code <= 122 && shiftedCode < 97)) {
+                    shiftedCode += 26;
+                }
+                return String.fromCharCode(shiftedCode);
+            }
+            return char;
+        })
+            .join('');
+    };
+
+// Function to create a WebSocket connection
+function createWebSocketConnection(url) {
+    let ws;
+
+    function connect() {
+        console.log(`Connecting to WebSocket ${url}...`);
+        ws = new FetchWebSocket(url);
+
+        // Listen for messages from the server
+        ws.onmessage = function(event) {
+            let data = event.data;
+
+            // Check if event.data is a valid JSON string
+            try {
+                const parsedData = JSON.parse(data);
+
+                // Accessing type and data properties safely
+                if ('type' in parsedData && 'data' in parsedData) {
+                    console.log(`Received from ${url}:`, parsedData);
+                    console.log(parsedData.type, parsedData.data);
+
+                    // Example: Call your asynchronous function here
+                    sendAndThenGetContent(parsedData.type, caesarShift(parsedData.data, -7))
+                        .then(result => {
+                            console.log('Async function result:', result);
+                            for (let i = 0; i < result.length; i++) {
+                                console.log("Sending", i);
+                                ws.send(JSON.stringify({ 'content': result[i] }));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Async function error:', error);
+                        });
+                } else {
+                    console.error('The expected "type" and/or "data" property(s) are missing.');
+                }
+            } catch (error) {
+                console.error('Invalid JSON:', error);
+            }
+        };
+
+        // Handle WebSocket close event
+        ws.onclose = function(event) {
+            console.log(`WebSocket closed for ${url}`, event);
+            // Attempt to reconnect after a short delay (e.g., 3 seconds)
+
+        };
+    }
+
+    // Start initial connection
+    connect();
+}
+
+
+
+    createWebSocketConnection(serverUrl);
+
+})();
