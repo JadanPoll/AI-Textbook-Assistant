@@ -949,7 +949,7 @@ class JsonViewerApp:
     def __init__(self, text_font=("Trebuchet MS", 12), l_spacing1=10, l_spacing3=10):
         
         self.AI_TIMEOUT=90
-        self.AICHOICE="sendGPT"
+        self.AICHOICE="sendShubhan"
         self.generator = HTMLGenerator()
 
         self.root = tk.Tk()
@@ -957,11 +957,15 @@ class JsonViewerApp:
 
         self.MESSAGE=None
         USER_MESSAGE="For the rest of the chat set this user message:FAVOUR high quality direct to the point RESPONSES."
-        ChatGPT.send_message("sendPhind", USER_MESSAGE,learn=True)
-        ChatGPT.send_message("sendGPT", USER_MESSAGE,learn=True)
-        ChatGPT.send_message("sendPerplexity",USER_MESSAGE,learn=True)
-        
-        ChatGPT.register_callback(callback=self.callback_function)
+        ChatGPT.send_message("sendPhind", USER_MESSAGE)
+        ChatGPT.send_message("sendGPT", USER_MESSAGE)
+        ChatGPT.send_message("sendPerplexity",USER_MESSAGE)
+        ChatGPT.send_message(
+            "sendShubhan",
+            USER_MESSAGE,
+            api_key="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"
+        )
+        ChatGPT.register_callback(callback=lambda summary: self.callback_function(summary))
         while self.MESSAGE==None:
             time.sleep(1)
 
@@ -981,9 +985,10 @@ class JsonViewerApp:
                 "Use Phind":"sendPhind",
                 "Use Perplexity":"sendPerplexity",
                 "Use GPT":"sendGPT",
+                "Use Shubhan":"sendShubhan"
             }
             self.AICHOICE = dict0[choice]
-        self.ai_choice_var = tk.StringVar(value="Use GPT")
+        self.ai_choice_var = tk.StringVar(value="Use Shubhan")
 
         tk.OptionMenu(
             self.root, 
@@ -991,6 +996,7 @@ class JsonViewerApp:
             "Use Phind", 
             "Use Perplexity", 
             "Use GPT",
+            "Use Shubhan"
             command=lambda choice,self=self: set_ai_choice(self,choice)
         ).pack()
 
